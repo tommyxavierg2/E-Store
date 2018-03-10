@@ -1,0 +1,94 @@
+{
+  "users": [
+    {
+      "Name": "Test",
+      "Lastname": "Testing",
+      "Email": "test@testing.com",
+      "Phone": "321231231",
+      "OptionalPhone": "6546546565",
+      "Password": "321321",
+      "ConfirmPassword": "321321",
+      "Client": false,
+      "Business": true,
+      "id": 1
+    },
+    {
+      "Name": "Test1",
+      "Lastname": "Testing",
+      "Email": "test1@testing.com",
+      "Phone": "56465465",
+      "OptionalPhone": "65465465",
+      "Password": "321321",
+      "ConfirmPassword": "321321",
+      "Client": true,
+      "Business": false,
+      "id": 2
+    }
+  ],
+  "products": [
+    {
+      "name": "Robot",
+      "image": "https://firebasestorage.googleapis.com/v0/b/morse-code-7eb28.appspot.com/o/robot.png?alt=media&token=c58acb41-2199-4a8d-a018-6514ecd37547",
+      "description": "Robot",
+      "date": "00/00/0000",
+      "price": "$1000.00",
+      "id": 1
+    },
+    {
+      "name": "Robot 1",
+      "image": "https://firebasestorage.googleapis.com/v0/b/morse-code-7eb28.appspot.com/o/robot.png?alt=media&token=c58acb41-2199-4a8d-a018-6514ecd37547",
+      "description": "Robot 1",
+      "date": "00/00/0000",
+      "price": "$1000.00",
+      "id": 3
+    },
+    {
+      "name": "Robot 2",
+      "image": "https://firebasestorage.googleapis.com/v0/b/morse-code-7eb28.appspot.com/o/robot.png?alt=media&token=c58acb41-2199-4a8d-a018-6514ecd37547",
+      "description": "Robot 2",
+      "date": "00/00/0000",
+      "price": "$1000.00",
+      "id": 4
+    },
+    {
+      "name": "Robot 3",
+      "image": "https://firebasestorage.googleapis.com/v0/b/morse-code-7eb28.appspot.com/o/robot.png?alt=media&token=c58acb41-2199-4a8d-a018-6514ecd37547",
+      "description": "Robot 3",
+      "date": "00/00/0000",
+      "price": "$1000.00",
+      "id": 5
+    },
+    {
+      "name": "Robot 4",
+      "image": "https://firebasestorage.googleapis.com/v0/b/morse-code-7eb28.appspot.com/o/robot.png?alt=media&token=c58acb41-2199-4a8d-a018-6514ecd37547",
+      "description": "Robot 8",
+      "date": "00/00/0000",
+      "price": "$1000.00",
+      "id": 2
+    },
+    {
+      "name": "Robot 5",
+      "image": "https://firebasestorage.googleapis.com/v0/b/morse-code-7eb28.appspot.com/o/robot.png?alt=media&token=c58acb41-2199-4a8d-a018-6514ecd37547",
+      "description": "Robot 5",
+      "date": "00/00/0000",
+      "price": "$1000.00",
+      "id": 6
+    },
+    {
+      "name": "Robot 6",
+      "image": "https://firebasestorage.googleapis.com/v0/b/morse-code-7eb28.appspot.com/o/robot.png?alt=media&token=c58acb41-2199-4a8d-a018-6514ecd37547",
+      "description": "Robot 5",
+      "date": "00/00/0000",
+      "price": "$1000.00",
+      "id": 7
+    },
+    {
+      "name": "Robot 7",
+      "image": "https://firebasestorage.googleapis.com/v0/b/morse-code-7eb28.appspot.com/o/robot.png?alt=media&token=c58acb41-2199-4a8d-a018-6514ecd37547",
+      "description": "Robot 7",
+      "date": "00/00/0000",
+      "price": "$1000.00",
+      "id": 8
+    }
+  ]
+}
