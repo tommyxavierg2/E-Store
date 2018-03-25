@@ -3,7 +3,7 @@
 
         <h1 class="jumbotron">Detail</h1>
 
-        <div style=" width: 500px; height: 400px;">
+        <div style=" width: 100%; height: 100%;">
             <product :product="product"></product>
         </div>
 
@@ -32,7 +32,7 @@ export default {
 
     methods: {
         getProduct(id) {
-            this.$http.get(`${api.url}products?id=${id}`)
+            this.$http.get(`${api.url}inventories?id=${id}`)
                 .then( response => this.product = response.data[0])
                 .catch( err => toastr.error(err));
         }

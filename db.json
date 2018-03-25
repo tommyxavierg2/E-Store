@@ -25,70 +25,122 @@
       "id": 2
     }
   ],
-  "products": [
+  "inventories": [
     {
       "name": "Robot",
       "image": "https://firebasestorage.googleapis.com/v0/b/morse-code-7eb28.appspot.com/o/robot.png?alt=media&token=c58acb41-2199-4a8d-a018-6514ecd37547",
       "description": "Robot",
       "date": "00/00/0000",
       "price": "$1000.00",
-      "id": 1
+      "id": 1,
+      "userId": 1,
+      "uploadedDate": "23/3/2018 18:36:28",
+      "state": 1
     },
     {
       "name": "Robot 1",
       "image": "https://firebasestorage.googleapis.com/v0/b/morse-code-7eb28.appspot.com/o/robot.png?alt=media&token=c58acb41-2199-4a8d-a018-6514ecd37547",
       "description": "Robot 1",
       "date": "00/00/0000",
-      "price": "$1000.00",
-      "id": 3
+      "price": "$2000.00",
+      "id": 3,
+      "userId": 1,
+      "uploadedDate": "23/3/2018 18:36:28",
+      "state": 1
     },
     {
       "name": "Robot 2",
       "image": "https://firebasestorage.googleapis.com/v0/b/morse-code-7eb28.appspot.com/o/robot.png?alt=media&token=c58acb41-2199-4a8d-a018-6514ecd37547",
       "description": "Robot 2",
       "date": "00/00/0000",
-      "price": "$1000.00",
-      "id": 4
+      "price": "$3000.00",
+      "id": 4,
+      "userId": 1,
+      "uploadedDate": "23/3/2018 18:36:28",
+      "state": 1
     },
     {
       "name": "Robot 3",
       "image": "https://firebasestorage.googleapis.com/v0/b/morse-code-7eb28.appspot.com/o/robot.png?alt=media&token=c58acb41-2199-4a8d-a018-6514ecd37547",
       "description": "Robot 3",
       "date": "00/00/0000",
-      "price": "$1000.00",
-      "id": 5
+      "price": "$4000.00",
+      "id": 5,
+      "userId": 1,
+      "uploadedDate": "23/3/2018 18:36:28",
+      "state": 1
     },
     {
       "name": "Robot 4",
       "image": "https://firebasestorage.googleapis.com/v0/b/morse-code-7eb28.appspot.com/o/robot.png?alt=media&token=c58acb41-2199-4a8d-a018-6514ecd37547",
       "description": "Robot 8",
       "date": "00/00/0000",
-      "price": "$1000.00",
-      "id": 2
+      "price": "$5000.00",
+      "id": 2,
+      "userId": 1,
+      "uploadedDate": "23/3/2018 18:36:28",
+      "state": 1
     },
     {
       "name": "Robot 5",
       "image": "https://firebasestorage.googleapis.com/v0/b/morse-code-7eb28.appspot.com/o/robot.png?alt=media&token=c58acb41-2199-4a8d-a018-6514ecd37547",
       "description": "Robot 5",
       "date": "00/00/0000",
-      "price": "$1000.00",
-      "id": 6
+      "price": "$6000.00",
+      "id": 6,
+      "userId": 1,
+      "uploadedDate": "23/3/2018 18:36:28",
+      "state": 0
     },
     {
       "name": "Robot 6",
       "image": "https://firebasestorage.googleapis.com/v0/b/morse-code-7eb28.appspot.com/o/robot.png?alt=media&token=c58acb41-2199-4a8d-a018-6514ecd37547",
       "description": "Robot 5",
       "date": "00/00/0000",
-      "price": "$1000.00",
-      "id": 7
+      "price": "$7000.00",
+      "id": 7,
+      "userId": 1,
+      "uploadedDate": "23/3/2018 18:36:28",
+      "state": 1
     },
     {
       "name": "Robot 7",
       "image": "https://firebasestorage.googleapis.com/v0/b/morse-code-7eb28.appspot.com/o/robot.png?alt=media&token=c58acb41-2199-4a8d-a018-6514ecd37547",
       "description": "Robot 7",
       "date": "00/00/0000",
+      "price": "$8000.00",
+      "id": 8,
+      "userId": 1,
+      "uploadedDate": "23/3/2018 18:36:28",
+      "state": 1
+    }
+  ],
+  "orders": [
+  ],
+  "carts": [
+    {
+      "name": "Robot",
+      "image": "https://firebasestorage.googleapis.com/v0/b/morse-code-7eb28.appspot.com/o/robot.png?alt=media&token=c58acb41-2199-4a8d-a018-6514ecd37547",
+      "description": "Robot",
+      "date": "00/00/0000",
       "price": "$1000.00",
-      "id": 8
+      "id": 1,
+      "userId": 1,
+      "uploadedDate": "23/3/2018 18:36:28",
+      "state": 1,
+      "buyerUserId": 2
+    },
+    {
+      "name": "Robot 1",
+      "image": "https://firebasestorage.googleapis.com/v0/b/morse-code-7eb28.appspot.com/o/robot.png?alt=media&token=c58acb41-2199-4a8d-a018-6514ecd37547",
+      "description": "Robot 1",
+      "date": "00/00/0000",
+      "price": "$2000.00",
+      "id": 3,
+      "userId": 1,
+      "uploadedDate": "23/3/2018 18:36:28",
+      "state": 1,
+      "buyerUserId": 2
     }
   ]
 }
