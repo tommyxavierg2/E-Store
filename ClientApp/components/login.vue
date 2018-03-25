@@ -50,13 +50,12 @@
 
         methods: {
             login(userData) {
-                this.$http.get(`${api.url}users?email=${userData.Email}&password=${userData.Password}`)
+                this.$http.get(`${api.url}users?Email=${userData.Email}&Password=${userData.Password}`)
                 .then(response => {
                     if (response) {
-                        let data = response.data.find(res => res.name === userData.name);
-                        this.$store.commit('login', data);
+                        this.$store.commit('login', response.data[0]);
                         if (userData.Remember) {
-                            localStorage.setItem('userData', JSON.stringify(data));
+                            localStorage.setItem('userData', JSON.stringify(response.data[0]));
                         }
                         this.$router.push('/');
                     } else {

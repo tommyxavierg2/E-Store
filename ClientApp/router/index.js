@@ -35,11 +35,11 @@ function requireAuth(to, from, next) {
 let router = new VueRouter({
     mode: 'history',
     routes: [
-        { name: 'home', path: '/', component: HomePage, beforeEnter: requireAuth },
+        { name: 'home', path: '/', component: HomePage },
         { name: 'register', path: '/register', component: RegisterPage },
         { name: 'login', path: '/login', component: LoginPage },
-        { name: 'detail', path: '/detail/:id', component: DetailPage, beforeEnter: requireAuth },
-        { name: 'profile', path: '/profile/:id', component: ProfilePage },
+        { name: 'detail', path: '/detail/:id', component: DetailPage },
+        { name: 'profile', path: '/profile/:id', component: ProfilePage, beforeEnter: requireAuth },
         { name: 'error', path: '/error', component: ErrorPage },
     ]
 })
