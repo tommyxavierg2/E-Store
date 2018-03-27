@@ -20,6 +20,7 @@
     "bootstrap-vue": "^2.0.0-rc.2",
     "core-js": "^2.5.3",
     "font-awesome": "^4.7.0",
+    "mongodb": "^3.0.5",
     "toastr": "^2.1.4",
     "vee-validate": "^2.0.4",
     "vue": "^2.5.13",

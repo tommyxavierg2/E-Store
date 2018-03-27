@@ -52,17 +52,17 @@
             login(userData) {
                 this.$http.get(`${api.url}users?Email=${userData.Email}&Password=${userData.Password}`)
                 .then(response => {
-                    if (response) {
+                    if (response.data.length) {
                         this.$store.commit('login', response.data[0]);
                         if (userData.Remember) {
                             localStorage.setItem('userData', JSON.stringify(response.data[0]));
                         }
                         this.$router.push('/');
                     } else {
-                        
+                        alert('NOPE!!');
                     }
                 })
-                .catch(err => toastr.warning(err))
+                .catch(err => alert(err))
              }
 
         }

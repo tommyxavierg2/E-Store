@@ -1,18 +1,6 @@
 {
   "users": [
     {
-      "Name": "Test",
-      "Lastname": "Testing",
-      "Email": "test@testing.com",
-      "Phone": "321231231",
-      "OptionalPhone": "6546546565",
-      "Password": "321321",
-      "ConfirmPassword": "321321",
-      "Client": false,
-      "Business": true,
-      "id": 1
-    },
-    {
       "Name": "Test1",
       "Lastname": "Testing",
       "Email": "test1@testing.com",
@@ -20,6 +8,7 @@
       "OptionalPhone": "65465465",
       "Password": "321321",
       "ConfirmPassword": "321321",
+      "Address": "",
       "Client": true,
       "Business": false,
       "id": 2

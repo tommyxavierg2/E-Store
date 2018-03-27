@@ -24,6 +24,7 @@
                         { name: 'OptionalPhone', type: 'number', placeholder: 'House, Office or parents', data: '', required: '', readonly: false },
                         { name: 'Password', type: 'password', placeholder: 'Password', data: '', required: 'required|', readonly: false },
                         { name: 'ConfirmPassword', type: 'password', placeholder: 'ConfirmPassword', data: '', required: 'required|', readonly: false },
+                        { name: 'Address', type: 'text', placeholder: 'Address', data: '', required: 'required|', readonly: false },
                         { name: 'Client', type: 'checkbox', class: "input", placeholder: '', data: false, required: '', readonly: false },
                         { name: 'Business', type: 'checkbox', class: "input", placeholder: '', data: false, required: '', readonly: false }
                     ],
