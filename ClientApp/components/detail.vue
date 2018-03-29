@@ -32,7 +32,7 @@ export default {
 
     methods: {
         getProduct(id) {
-            this.$http.get(`${api.url}inventories?id=${id}`)
+            this.$http.get(`${api.url}product/${id}`)
                 .then( response => this.product = response.data[0])
                 .catch( err => toastr.error(err));
         }

@@ -21,5 +21,22 @@ namespace E_Store.Models
              } 
         }
 
+        public IMongoCollection<Product> Products
+        {
+            get
+            {
+                return database.GetCollection<Product>("Products");
+            }
+        }
+
+        
+        public IMongoCollection<Cart> Carts
+        {
+            get
+            {
+                return database.GetCollection<Cart>("Carts");
+            }
+        }
+
     }
 }

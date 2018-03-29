@@ -70,7 +70,7 @@
         methods: {
             searchProduct(query) {
                 this.records.multiselect.isLoading = true;
-                this.$http.get(`${api.url}inventories?name=${query}`)
+                this.$http.get(`${api.url}product/${query}`)
                     .then(response => {
                         this.records.multiselect.searchedProduct = response.data;
                         this.records.isLoading = false;

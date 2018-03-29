@@ -42,6 +42,6 @@ namespace E_Store.Models
         public bool Business { get; set; }
 
         [BsonElement("State")]
-        public bool State { get; set; }
+        public int State { get; set; }
     }
 }

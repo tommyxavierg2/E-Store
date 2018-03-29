@@ -50,7 +50,7 @@
 
         methods: {
             login(userData) {
-                this.$http.get(`${api.url}users?Email=${userData.Email}&Password=${userData.Password}`)
+                this.$http.get(`${api.url}user?email=${userData.Email}&password=${userData.Password}`)
                 .then(response => {
                     if (response.data.length) {
                         this.$store.commit('login', response.data[0]);

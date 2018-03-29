@@ -15,7 +15,7 @@
 
                     <router-link class="card-text" :to="{ path: `/detail/${product.id}` }">{{product.description}}</router-link>
             
-                    <p class="card-text">{{product.price}}</p>
+                    <p class="card-text">RD$ {{product.price}}</p>
             
                 </div>
 

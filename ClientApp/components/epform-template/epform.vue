@@ -4,7 +4,11 @@
           <div class="form-group" v-for="field in formFields" :key="field.name">
             <label v-if="!field.class">{{field.name}} </label>
             <p :class="{ 'control': true }" v-if="!field.class">
-                <input :name="field.name" v-model="field.data" :class="{ 'form-control': true, 'text-danger': errors.has(field.name) }" :type="field.type"  :placeholder="field.placeholder" v-validate="`${field.required}`" :readonly="field.readonly">
+                <input v-if="field.type !== 'select'" :name="field.name" v-model="field.data" :class="{ 'form-control': true, 'text-danger': errors.has(field.name) }" :type="field.type"  :placeholder="field.placeholder" v-validate="`${field.required}`" :readonly="field.readonly">
+                <select v-else v-model="field.data" class="form-control">
+                    <label :for="field.name"></label>
+                    <option v-for="option in field.options" :key="option.name" :id="option.name" :value="option.data" >{{option.name}}</option>
+                 </select>
                 <span class="text-danger" v-show="errors.has(field.name)">{{ errors.first(field.name) }}</span>
             </p>
             <label v-if="field.class"> <input :type="field.type" :class="field.class" v-model="field.data">{{field.name}}</label>

@@ -21,32 +21,32 @@
                             <div class="form-group">
                                 <p :class="{ 'control': true }">
                                     <label>Name</label>
-                                    <input name="Name" type="text" class="form-control" v-model.trim="records.user.Name" :readonly="!records.page.editing" v-validate="'required|'">
-                                    <span class="text-danger" v-show="errors.has(records.user.Name)">{{ errors.first(records.user.Name) }}</span>
+                                    <input name="Name" type="text" class="form-control" v-model.trim="records.user.name" :readonly="!records.page.editing" v-validate="'required|'">
+                                    <span class="text-danger" v-show="errors.has(records.user.name)">{{ errors.first(records.user.name) }}</span>
                                 </p>
                                 <p :class="{ 'control': true }">
                                     <label>Lastname</label>
-                                    <input name="Lastname" type="text" class="form-control" v-model.trim="records.user.Lastname" :readonly="!records.page.editing" v-validate="'required|'">
-                                    <span class="text-danger" v-show="errors.has(records.user.Lastname)">{{ errors.first(records.user.Lastname) }}</span>
+                                    <input name="Lastname" type="text" class="form-control" v-model.trim="records.user.lastName" :readonly="!records.page.editing" v-validate="'required|'">
+                                    <span class="text-danger" v-show="errors.has(records.user.lastName)">{{ errors.first(records.user.lastName) }}</span>
                                 </p>
                                 <p :class="{ 'control': true }">
                                     <label>Email</label>
-                                    <input name="Email" type="text" class="form-control" v-model.trim="records.user.Email" :readonly="!records.page.editing" v-validate="'required|email'">
-                                    <span class="text-danger" v-show="errors.has(records.user.Email)">{{ errors.first(records.user.Email) }}</span>
+                                    <input name="Email" type="text" class="form-control" v-model.trim="records.user.email" :readonly="!records.page.editing" v-validate="'required|email'">
+                                    <span class="text-danger" v-show="errors.has(records.user.email)">{{ errors.first(records.user.email) }}</span>
                                 </p>   
                                 <p :class="{ 'control': true }">
                                     <label>Phone</label>
-                                    <input name="Phone" type="text" class="form-control" v-model.trim="records.user.Phone" :readonly="!records.page.editing">
-                                    <span class="text-danger" v-show="errors.has(records.user.Phone)">{{ errors.first(records.user.Phone) }}</span>
+                                    <input name="Phone" type="text" class="form-control" v-model.trim="records.user.phone" :readonly="!records.page.editing">
+                                    <span class="text-danger" v-show="errors.has(records.user.phone)">{{ errors.first(records.user.phone) }}</span>
                                 </p>
                                 <p :class="{ 'control': true }">
                                     <label>Optional Phone</label>
-                                    <input name="OptionalPhone" type="text" class="form-control" v-model.trim="records.user.OptionalPhone" :readonly="!records.page.editing">
-                                    <span class="text-danger" v-show="errors.has(records.user.OptionalPhone)">{{ errors.first(records.user.OptionalPhone) }}</span>
+                                    <input name="OptionalPhone" type="text" class="form-control" v-model.trim="records.user.optionalPhone" :readonly="!records.page.editing">
+                                    <span class="text-danger" v-show="errors.has(records.user.optionalPhone)">{{ errors.first(records.user.optionalPhone) }}</span>
                                 </p>
                                 <p :class="{ 'control': true }">
                                     <label>Address</label>
-                                    <input type="text" class="form-control" v-model.trim="records.user.Address" :readonly="!records.page.editing" v-validate="'required|'">
+                                    <input type="text" class="form-control" v-model.trim="records.user.address" :readonly="!records.page.editing" v-validate="'required|'">
                                 </p>
                             </div>
                             <button class="btn btn-danger btn-block" @click="records.page.editing = true" v-if="!records.page.editing">Edit</button>
@@ -161,7 +161,7 @@
         },
         computed:{
             fullName() {
-                return `${this.records.user.Name} ${this.records.user.Lastname}`; 
+                return `${this.records.user.name} ${this.records.user.lastName}`; 
             },
 
             checkUserLogged() {
@@ -170,7 +170,7 @@
         },
         methods: {
             getUser(userId) {
-                this.$http.get(`${api.url}users?id=${userId}`)
+                this.$http.get(`${api.url}user/${userId}`)
                 .then(response => {
                     this.records.user = response.data[0];
                     this.records.originalUser = JSON.stringify(this.records.user);
@@ -179,7 +179,7 @@
             },
 
             getOrders(userId) {
-                this.$http.get(`${api.url}orders?userId=${userId}&state=2`)
+                this.$http.get(`${api.url}cart?userId=${userId}&state=2`)
                     .then(res => {
                         this.records.orders = res.data[0];
                     })
@@ -187,9 +187,9 @@
             },
 
             getCartItems(userId) {
-                this.$http.get(`${api.url}carts?buyerUserId=${userId}`)
+                this.$http.get(`${api.url}cart?userId=${userId}&state=1`)
                     .then(res => {
-                        this.records.cartItems = res.data;
+                        this.records.cartItems = res.data[0];
                     })
                     .catch(err => alert(err))     
             },
@@ -198,10 +198,10 @@
                 let t = document.getElementById('image').files[0];
             },
 
-            getInventory(userID) {
-                this.$http.get(`${api.url}inventories?userId=${userID}&state=1`)
+            getInventory(userId) {
+                this.$http.get(`${api.url}product?userId=${userId}&state=1`)
                     .then(res => {
-                        this.records.inventory = res.data;
+                        this.records.inventory = res.data[0];
                     })
                     .catch(err => alert(err));
             },
@@ -211,7 +211,7 @@
                     if(confirm(`¿Are you sure about adding ${product.name} to the inventory?`)) {
                         product.userId = this.$route.params.id;
                         product.uploadedDate = new Date().toLocaleString();
-                        this.$http.post(`${api.url}inventories`, product) 
+                        this.$http.post(`${api.url}product`, product) 
                         .then(res => {
                             alert(`Item: ${product.name} with a price of RD$ ${product.price} has been successfully added to your inventory`);
                             this.getInventory(product.userId);
@@ -228,7 +228,7 @@
             deleteItem(product, index) {
                 if (confirm(`Are you sure about deleting item ${product.name}`)) {
                     product.state = 0;
-                    this.$http.put(`${api.url}inventories/${product.id}`, product)
+                    this.$http.put(`${api.url}product/${product.id}`, product)
                         .then(res => {
                             this.records.inventory.splice(index, 1);
                             alert(`Item ${product.name} successfully removed`);
@@ -238,7 +238,7 @@
             },
             editItem(product) {
                 if (confirm(`Are you sure about editing item ${product.name}`)) {
-                    this.$http.put(`${api.url}inventories/${product.id}`, product)
+                    this.$http.put(`${api.url}product/${product.id}`, product)
                         .then(res => {
                             this.records.page.editing = false;
                             alert(`Item ${product.name} successfully updated`);
@@ -253,7 +253,7 @@
                     this.records.cartItems[index].state = 2;
                 });
                 this.records.order.items = this.records.cartItems;
-                this.$http.post(`${api.url}orders`, this.records.order)
+                this.$http.put(`${api.url}cart/${this.records.order.id}`, this.records.order)
                     .then(res => {
 
                         this.records.cartItems = [];
@@ -268,7 +268,7 @@
             updateUser(userData) {
                 this.$validator.validateAll().then((result) => {
                     if (result) {
-                        this.$http.put(`${api.url}users/${userData.id}`, userData)
+                        this.$http.put(`${api.url}user/${userData.id}`, userData)
                             .then(response => {
                                 this.records.originalUser = JSON.stringify(this.records.user);
                                 toastr.success('User sucessfuly update');

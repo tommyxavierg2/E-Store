@@ -25,8 +25,12 @@
                         { name: 'Password', type: 'password', placeholder: 'Password', data: '', required: 'required|', readonly: false },
                         { name: 'ConfirmPassword', type: 'password', placeholder: 'ConfirmPassword', data: '', required: 'required|', readonly: false },
                         { name: 'Address', type: 'text', placeholder: 'Address', data: '', required: 'required|', readonly: false },
-                        { name: 'Client', type: 'checkbox', class: "input", placeholder: '', data: false, required: '', readonly: false },
-                        { name: 'Business', type: 'checkbox', class: "input", placeholder: '', data: false, required: '', readonly: false }
+                        { name: "Account type", type: 'select', data: null, class: "", options: [ 
+                                { name: 'Client', placeholder: '', data: 0, required: 'required|', readonly: false },
+                                { name: 'Business', type: 'select', class: "", placeholder: '', data: 1, required: 'required|', readonly: false }
+                            ] ,
+                        }
+                        
                     ],
                     formButtons: [
                         { name: 'Cancel', class: "btn btn-danger btn-block", action: this.cancelRegistration },
@@ -45,16 +49,22 @@
 
         created() {},
 
+        computed: {
+
+        },
+ 
         methods: {
             register(userData) {
-                if (userData.Password === userData.ConfirmPassword) {
-                        this.$http.post(`${api.url}users`, userData)
+                if (this.checkPasswordEquality(userData) && this.checkPasswordLength(userData)) {
+                    if (confirm("¿Are you sure you want to signUp with this information?")) {
+                        this.$http.post(`${api.url}user`, userData)
                         .then(response => {
-                            toastr.success(`User ${userData.name} ${userData.lastname} successfully created, thank you for joining us!!`);
-                            this.$store.commit('login', response.data);
+                            toastr.success(`User ${userData.Name} ${userData.Lastname} successfully created, thank you for joining us!!`);
+                            this.$store.commit('login', response.data[0]);
                             this.$router.replace('/');
                         })
                         .catch(err => this.displayAlert(err));
+                    }
                 } else {
                     toastr.warning('Make sure both passwords are equal');
                 }
@@ -64,6 +74,14 @@
                 if (confirm('You are about to leave this page, are you sure?')) {
                     this.$router.replace('/');
                 }
+            },
+
+            checkPasswordLength(userData) {
+                return userData.Password.length;
+            },
+
+            checkPasswordEquality(userData) {
+                return userData.Password === userData.ConfirmPassword ? true : false;
             }
         }
     }

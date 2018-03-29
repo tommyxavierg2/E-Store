@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using E_Store.Models;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
@@ -22,47 +21,43 @@ namespace E_Store.Controllers
         }
 
         [HttpPost]
-        public string Create([FromBody] User user)
+        public IEnumerable<User> Create([FromBody] User user)
         {
             try 
             {
                 dbContext.Users.InsertOne(user);
-                return "1 Record Added";
+                return dbContext.Users.Find(x => x.Email == user.Email).ToList();
             }
             catch (Exception ex)
             {
-                throw;
+                throw ex;
             }
         }
 
         [HttpGet]
-        public IEnumerable<User> GetAll()
+        public IEnumerable<User> GetAllOrGetUserByEmailAndPassword(string email, string password)
         {
-            try
-            {
-                var users = dbContext.Users.Find(x => true).ToList();
-                return users;
-            }
-            catch (Exception ex)
-            {
-                throw;
+            if (String.IsNullOrEmpty(email) && String.IsNullOrEmpty(password)) {
+                return dbContext.Users.Find(x => true).ToList();;
+            } 
+            else {
+                return dbContext.Users.Find(x => x.Email == email && x.Password == password).ToList();
             }
 
         }
 
-        [HttpGet("{id}", Name = "GetById")]
-         public IEnumerable<User> GetById(string id)
+        [HttpGet("{id}", Name = "GetUserById")]
+         public IEnumerable<User> GetUserById(string id)
          {
-             try 
-             {
-                var user =  dbContext.Users.Find(x => x.Id == id).ToList();
-                return user;
-             }
-             catch (Exception ex)
-             {
-                 throw;
-             }
+            return dbContext.Users.Find(x => x.Id == id).ToList();
          }
+
+       /* [HttpGet("{email, password}", Name = "GetUserByEmailAndPassword")]
+         public IEnumerable<User> GetUserByEmailAndPassword()
+         {
+            var users = dbContext.Users; 
+            return users.Find(x => x.Email == email && x.Password == password).ToList();
+         } /* */
 
         [HttpPut("{id}")]
          public string Update(string id, [FromBody] User user)

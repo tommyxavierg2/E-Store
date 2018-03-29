@@ -8,7 +8,8 @@ export default new Vuex.Store({
 // STATE
     state: {
         loggedIn: false,
-        user: {}
+        user: {},
+        cart: []
     }, 
 
 // MUTATIONS
@@ -22,6 +23,10 @@ export default new Vuex.Store({
             state.user = {};
             state.loggedIn = false;
             localStorage.removeItem('userData');
+        },
+
+        addItemToCart(state, item) {
+            state.cart.push(item);
         }
     },
 
