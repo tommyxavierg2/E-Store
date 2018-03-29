@@ -61,18 +61,24 @@
                         </div>
                     </div>
                 </b-tab>
-                <b-tab v-if="checkUserLogged.user.Client" title="Cart">
-                    <h1 style="margin-bottom: 15px;">Your Cart</h1>
-                    <product v-for="item in records.cartItems" :key="item.id" :product="item" style="height: 25%;"></product>
-                    <button v-if="records.cartItems.length" type="button" class="btn btn-success btn-block" style="margin-top: 10px;" @click="checkout()">Checkout</button>                    
+                <b-tab v-if="checkUserLogged.user.client" title="Cart">
+                    <div v-if="checkCartState">
+                        <h1 style="margin-bottom: 15px;">Your Cart</h1>
+                        <product v-for="item in records.cartItems.products" :key="item.id" :product="item" style="height: 25%;"></product>
+                        <button v-if="records.cartItems.length" type="button" class="btn btn-success btn-block" style="margin-top: 10px;" @click="checkout()">Checkout</button>                   
+                    </div>
+                    <div v-else>
+                        <h1 style="margin-bottom: 15px;">¿Your cart seems empty, want to add some items to it?</h1>
+                        <button class="btn btn-info" @click="$router.go(-1)">Return Home</button>  
+                    </div>
                 </b-tab>
-                <b-tab id="Orders" title="Orders" v-if="checkUserLogged.user.Client">
-                    <div v-if="records.order.items.length">
-                        <product v-for="order in records.orders.items" :key="order.id" :product="order" ></product>
+                <b-tab id="Orders" title="Orders" v-if="checkUserLogged.user.client">
+                    <div v-if="checkOrderState">
+                        <product v-for="order in records.carItems.products" :key="order.id" :product="order" ></product>
                     </div>
                     <div v-else> <h1>There are no orders in progress</h1> </div>
                 </b-tab>
-                <b-tab title="Inventory" v-if="checkUserLogged.user.Business">
+                <b-tab title="Inventory" v-if="checkUserLogged.user.business">
                     <div class="row" v-if="records.inventory">
                         <div class="col-md-4" style="padding: 10px;" v-for="(product, index) in records.inventory" :key="product.id">
                             <router-link v-if="!records.page.editing" :to="{ path: `/product/${product.id}`}">{{product.name}}</router-link>
@@ -95,7 +101,7 @@
                         <button class="btn btn-success" @click="records.page.tabIndex = 2">Add Product</button>   
                     </div>
                 </b-tab>
-                <b-tab title="Add Product" v-if="checkUserLogged.user.Business">
+                <b-tab title="Add Product" v-if="checkUserLogged.user.business">
                     <div class="form-control">
                         <div class="form-group">
                             <label>Name</label>
@@ -166,6 +172,18 @@
 
             checkUserLogged() {
                 return this.$store.state;
+            },
+
+            checkCartState() {
+                if (this.records.cartItems) {
+                    return this.records.cartItems.state === 1? 1 : 0; 
+                }
+            },
+
+            checkOrderState() {
+                if (this.records.cartItems) {
+                    return this.records.cartItems.state === 2? 1 : 0; 
+                }
             }
         },
         methods: {

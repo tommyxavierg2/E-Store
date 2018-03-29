@@ -9,7 +9,7 @@
             </div>
 
             <div class="col-md-6">
-                <button v-if="checkUserLogged.user.Client" type="button" class="btn" style="float: right; position: static;">Add To Cart {{checkUserLogged.cart.length}}</button>
+                <button v-if="checkUserLogged.user.client" type="button" class="btn" style="float: right; position: static;" @click="addItemsToCart(records.cart)">Add To Cart {{checkUserLogged.cart.length}}</button>
             </div>
         </div>
     
@@ -18,7 +18,7 @@
             <div class="col-md-4" v-for="product in records.products" :key="product.id" style="margin-bottom: 10px;">
     
                 <product :product="product">
-                    <button class="btn btn-info btn-block" v-if="checkUserLogged.user.Client" @click="addToCart(product)"><icon icon="cart-plus"/> </button>
+                    <button class="btn btn-info btn-block" v-if="checkUserLogged.user.client" @click="addToCart(product)"><icon icon="cart-plus"/> </button>
                 </product>
     
             </div>
@@ -39,6 +39,9 @@
                 records: {
                     page: { header: 'Home', title: 'Recently added' },
                     products: [],
+                    cart: {
+                        id: '', products: [], date: '', state: 1, totalPrice: null, userId: ''
+                    },
                     multiselect: {
                         isLoading: false, searchValue: '', searchedProduct: [] 
                     },
@@ -67,13 +70,26 @@
                 .catch( err => toastr.warning(err));
             },
 
-            addToCart(item) {
-                if (confirm(`¿Are you sure about adding item ${item.name} to your cart?`)) {
-                    item.buyerUserId = this.$store.state.user.id;
-                    this.$http.post(`${api.url}cart`, item)
-                        .then(res => alert(`Item ${item.name} has been added sucessfully to your cart`))
+            addItemsToCart(recordsCart) {
+                if (confirm(`¿Are you sure about adding these items to your cart?`)) {
+                    recordsCart.products = this.checkUserLogged.cart;
+                    recordsCart.userId = this.checkUserLogged.user.id;
+                    recordsCart.date = new Date().toLocaleString();
+                    this.checkUserLogged.cart.forEach(item => {
+                        recordsCart.totalPrice += item.price;
+                    });
+                    this.$http.post(`${api.url}cart`, recordsCart)
+                        .then(res => {
+                                alert(`Items added sucessfully to your cart`);
+                                this.$router.push(`/profile/${this.checkUserLogged.user.id}`);
+                                this.checkUserLogged.cart = [];
+                            })
                         .catch(err => alert(err));
                 }
+            },
+
+            addToCart(item) {
+                this.$store.commit('addItemsToCart', item);
             }
         },
     
