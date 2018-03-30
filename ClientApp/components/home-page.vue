@@ -9,7 +9,7 @@
             </div>
 
             <div class="col-md-6">
-                <button v-if="checkUserLogged.user.client" type="button" class="btn" style="float: right; position: static;" @click="addItemsToCart(records.cart)">Add To Cart {{checkUserLogged.cart.length}}</button>
+                <button v-if="checkUserLogged.user.client" type="button" class="btn" style="float: right; position: static;" @click="addItemsToCart(records.cart)" :disabled="!checkUserLogged.cart.length">Add To Cart {{checkUserLogged.cart.length}}</button>
             </div>
         </div>
     
@@ -18,7 +18,7 @@
             <div class="col-md-4" v-for="product in records.products" :key="product.id" style="margin-bottom: 10px;">
     
                 <product :product="product">
-                    <button class="btn btn-info btn-block" v-if="checkUserLogged.user.client" @click="addToCart(product)"><icon icon="cart-plus"/> </button>
+                    <button class="btn btn-info btn-block" v-if="checkUserLogged.user.client" @click="addToCart(product)"><icon icon="cart-plus"/> RD$ {{product.price}} </button>
                 </product>
     
             </div>
@@ -89,7 +89,7 @@
             },
 
             addToCart(item) {
-                this.$store.commit('addItemsToCart', item);
+                this.$store.commit('addItemToCart', item);
             }
         },
     

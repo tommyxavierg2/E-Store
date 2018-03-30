@@ -64,8 +64,10 @@
                 <b-tab v-if="checkUserLogged.user.client" title="Cart">
                     <div v-if="checkCartState">
                         <h1 style="margin-bottom: 15px;">Your Cart</h1>
-                        <product v-for="item in records.cartItems.products" :key="item.id" :product="item" style="height: 25%;"></product>
-                        <button v-if="records.cartItems.length" type="button" class="btn btn-success btn-block" style="margin-top: 10px;" @click="checkout()">Checkout</button>                   
+                        <product v-for="(item, index) in records.cartItems.products" :key="item.id" :product="item">
+                            <button class="btn" @click="deleteCartItem(item, index, records.cartItems)" style="margin-bottom: 2%;">Remove item from cart</button>
+                        </product>
+                        <button type="button" class="btn btn-success btn-block" style="margin-top: 10px;" @click="checkout(records.cartItems)">Checkout</button>                   
                     </div>
                     <div v-else>
                         <h1 style="margin-bottom: 15px;">¿Your cart seems empty, want to add some items to it?</h1>
@@ -74,7 +76,7 @@
                 </b-tab>
                 <b-tab id="Orders" title="Orders" v-if="checkUserLogged.user.client">
                     <div v-if="checkOrderState">
-                        <product v-for="order in records.carItems.products" :key="order.id" :product="order" ></product>
+                        <product v-for="order in records.orders.products" :key="order.id" :product="order"></product>
                     </div>
                     <div v-else> <h1>There are no orders in progress</h1> </div>
                 </b-tab>
@@ -147,7 +149,7 @@
                 records: {
                     page: { title: 'Profile', editing: false, tabIndex: 0 },
                     user: {},
-                    orders: [],
+                    orders: {},
                     paymentInfo: {},
                     inventory: [],
                     order: {
@@ -181,8 +183,8 @@
             },
 
             checkOrderState() {
-                if (this.records.cartItems) {
-                    return this.records.cartItems.state === 2? 1 : 0; 
+                if (this.records.orders) {
+                    return this.records.orders.state === 2? 1 : 0; 
                 }
             }
         },
@@ -201,7 +203,7 @@
                     .then(res => {
                         this.records.orders = res.data[0];
                     })
-                    .catch(err => toastr.error(err));
+                    .catch(err => alert(err));
             },
 
             getCartItems(userId) {
@@ -254,6 +256,16 @@
                         .catch(err => alert(err));
                 }
             },
+
+            deleteCartItem(item, index, cart) {
+                if (confirm(`Are you sure about deleting this item`)) {
+                    cart.products.splice(index, 1)
+                    this.$http.put(`${api.url}cart/${cart.id}`, cart)
+                    .then(res => alert(`Item successfully removed`))
+                    .catch(err => alert(err));
+                }
+            },
+
             editItem(product) {
                 if (confirm(`Are you sure about editing item ${product.name}`)) {
                     this.$http.put(`${api.url}product/${product.id}`, product)
@@ -266,18 +278,13 @@
                     this.records.page.editing = false;
                 }
             },
-            checkout() {
-                this.records.cartItems.forEach((cartItem, index) => {
-                    this.records.cartItems[index].state = 2;
-                });
-                this.records.order.items = this.records.cartItems;
-                this.$http.put(`${api.url}cart/${this.records.order.id}`, this.records.order)
+            checkout(cart) {
+                cart.state = 2;
+                this.$http.put(`${api.url}cart/${cart.id}`, cart)
                     .then(res => {
-
                         this.records.cartItems = [];
+                        this.getOrders(this.checkUserLogged.user.id);
                         this.records.page.tabIndex = 2;
-                        this.getOrders(res.data.userId);
-
                         alert(`Order ${res.data.id} has been placed and will be delivered withing 3 business days`); 
                     })
                     .catch(err => alert(err));
@@ -313,7 +320,7 @@
             }
         },
         created() {
-            this.init(this.$route.params.id);
+            this.init(this.checkUserLogged.user.id);
         }
     }
 </script>

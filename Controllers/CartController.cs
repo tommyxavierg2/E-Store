@@ -40,7 +40,7 @@ namespace E_Store.Controllers
                 return dbContext.Carts.Find(x => x.State == state).ToList();
             }
             else {
-                return dbContext.Carts.Find(x => x.UserId == userId && x.State == state).ToList();;
+                return dbContext.Carts.Find(x => x.UserId == userId && x.State == state).ToList();
             }
         }
         

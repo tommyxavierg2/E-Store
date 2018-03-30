@@ -3,33 +3,26 @@
 
         <div class="row">
             <div class="col-md-6">
-                <router-link class="card-title" :to="{ path: `/detail/${product.id}`}">
-                    <img :src="product.image" :alt="product.name" class="card-img-top">
-                </router-link>
-            </div>
-            <div class="col-md-6">
-                    
-                <div class="card-block">
-            
-                    <router-link class="card-title" :to="{ path: `/detail/${product.id}` }">{{product.name}}</router-link> <br>
-
-                    <router-link class="card-text" :to="{ path: `/detail/${product.id}` }">{{product.description}}</router-link>
-            
-                    <p class="card-text">RD$ {{product.price}}</p>
-            
+                <div class="card text-xs-center">
+                    <router-link :to="{ path: `/detail/${product.id}`}">
+                        <img :src="product.image" :alt="product.name" class="card-img-top">
+                    </router-link>
+                    <div>
+                        <router-link :to="{ path: `/detail/${product.id}` }" style="padding-left: 10%;">{{product.name}}</router-link> <br>
+                    </div>
                 </div>
-
             </div>
-
+            <div class="col-md-6"> 
+                <div class="card-block">
+                    <router-link class="card-text" :to="{ path: `/detail/${product.id}` }">{{product.description}}</router-link>
+                    <h4 class="card-text">RD$ {{product.price}}</h4>
+                </div>
+            </div>
         </div> 
 
-        <ul class="list-group list-group-flush">
-            
-            <li class="list-group-item"> 
-                <slot></slot>
-            </li>
-
-        </ul> 
+        <div class="list-group list-group-flush">
+            <slot></slot>
+        </div> 
      
     </div>
 </template>
@@ -47,3 +40,7 @@
     
     }
 </script>
+<style scoped>
+
+</style>
+

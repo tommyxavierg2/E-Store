@@ -25,7 +25,7 @@ export default new Vuex.Store({
             localStorage.removeItem('userData');
         },
 
-        addItemsToCart(state, item) {
+        addItemToCart(state, item) {
             state.cart.push(item);
             alert("Item added sucessfully");
         }
