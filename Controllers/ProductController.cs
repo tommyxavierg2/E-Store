@@ -34,15 +34,13 @@ namespace E_Store.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<Product> GetAll(int state)
+        public IEnumerable<Product> GetAll(string userId, int state)
         {
-            try
-            {
+            if (String.IsNullOrEmpty(userId)) {
                 return dbContext.Products.Find(x => x.State == state).ToList();
             }
-            catch (Exception ex)
-            {
-                throw ex;
+            else {
+               return dbContext.Products.Find(x => x.UserId == userId && x.State == state).ToList(); 
             }
 
         }

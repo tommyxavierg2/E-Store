@@ -14,7 +14,8 @@ import store from '../store/index';
 Vue.use(VueRouter);
 
 function requireAuth(to, from, next) {
-    if (!store.state.loggedIn) {
+    let userData = localStorage.getItem('userData');
+    if (!store.state.loggedIn && !userData) {
         toastr.warning('In order to access this section you need to be logged in');
         next({
             path: '/login'

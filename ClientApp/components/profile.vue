@@ -74,14 +74,29 @@
                         <button class="btn btn-info" @click="$router.go(-1)">Return Home</button>  
                     </div>
                 </b-tab>
-                <b-tab id="Orders" title="Orders" v-if="checkUserLogged.user.client">
-                    <div v-if="checkOrderState">
-                        <product v-for="order in records.orders.products" :key="order.id" :product="order"></product>
+                <b-tab id="Orders" title="Orders">
+                    <div v-if="checkUserLogged.user.client">
+                        <div v-if="checkOrderState">
+                            <product v-for="order in records.clientOrders.products" :key="order.id" :product="order"></product>
+                        </div>
+                        <div v-else> <h1>There are no orders in progress</h1> </div>
                     </div>
-                    <div v-else> <h1>There are no orders in progress</h1> </div>
+                    <div v-else>
+                        <order v-for="order in records.businessOrders" :key="order.id" :orders="order">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <button class="btn btn-block btn-danger" @click="cancelOrder(order)">Cancel Order</button>
+                                </div>
+                                <div class="col-md-6">
+                                    <button class="btn btn-block btn-success" @click="sendOrder(order)">Ship Order</button>
+                                </div>
+                            </div>
+                        </order>
+                        <div v-if="!records.businessOrders.length"> <h1>There are no pending orders</h1> </div>
+                    </div>
                 </b-tab>
                 <b-tab title="Inventory" v-if="checkUserLogged.user.business">
-                    <div class="row" v-if="records.inventory">
+                    <div class="row" v-if="records.inventory.length">
                         <div class="col-md-4" style="padding: 10px;" v-for="(product, index) in records.inventory" :key="product.id">
                             <router-link v-if="!records.page.editing" :to="{ path: `/product/${product.id}`}">{{product.name}}</router-link>
                             <input class="card-text" v-model.trim="product.name" :readonly="!records.page.editing">
@@ -100,7 +115,7 @@
                     </div>
                     <div v-else>
                         <h3>There are no products in the inventory, want to add some?</h3>
-                        <button class="btn btn-success" @click="records.page.tabIndex = 2">Add Product</button>   
+                        <button class="btn btn-success" @click="records.page.tabIndex = 3">Add Product</button>   
                     </div>
                 </b-tab>
                 <b-tab title="Add Product" v-if="checkUserLogged.user.business">
@@ -149,7 +164,8 @@
                 records: {
                     page: { title: 'Profile', editing: false, tabIndex: 0 },
                     user: {},
-                    orders: {},
+                    clientOrders: {},
+                    businessOrders: {},
                     paymentInfo: {},
                     inventory: [],
                     order: {
@@ -183,8 +199,8 @@
             },
 
             checkOrderState() {
-                if (this.records.orders) {
-                    return this.records.orders.state === 2? 1 : 0; 
+                if (this.records.clientOrders) {
+                    return this.records.clientOrders.state === 2? 1 : 0; 
                 }
             }
         },
@@ -198,10 +214,18 @@
                 .catch(err => toastr.error(err))
             },
 
-            getOrders(userId) {
+            getClientOrders(userId) {
                 this.$http.get(`${api.url}cart?userId=${userId}&state=2`)
                     .then(res => {
-                        this.records.orders = res.data[0];
+                        this.records.clientOrders = res.data[0];
+                    })
+                    .catch(err => alert(err));
+            },
+
+            getBusinessOrders() {
+                this.$http.get(`${api.url}order?company=${this.checkUserLogged.user.id}`)
+                    .then(res => {
+                        this.records.businessOrders = res.data;
                     })
                     .catch(err => alert(err));
             },
@@ -214,23 +238,23 @@
                     .catch(err => alert(err))     
             },
 
+            getInventory(userId) {
+                this.$http.get(`${api.url}product?userId=${userId}&state=1`)
+                    .then(res => {
+                        this.records.inventory = res.data;
+                    })
+                    .catch(err => alert(err));
+            },
+            
             addImage() {
                 let t = document.getElementById('image').files[0];
             },
 
-            getInventory(userId) {
-                this.$http.get(`${api.url}product?userId=${userId}&state=1`)
-                    .then(res => {
-                        this.records.inventory = res.data[0];
-                    })
-                    .catch(err => alert(err));
-            },
- 
             addItemToInventory(product) {
-                if (product.name && product.price && product.description && product.image) {
+                if (product.name && product.price && product.description) {
                     if(confirm(`¿Are you sure about adding ${product.name} to the inventory?`)) {
-                        product.userId = this.$route.params.id;
-                        product.uploadedDate = new Date().toLocaleString();
+                        product.userId = this.checkUserLogged.user.id;
+                        product.date = new Date().toLocaleString();
                         this.$http.post(`${api.url}product`, product) 
                         .then(res => {
                             alert(`Item: ${product.name} with a price of RD$ ${product.price} has been successfully added to your inventory`);
@@ -245,6 +269,31 @@
                     alert('Please make sure too fill all fields');
                 }
             },
+
+            cancelOrder(order) {
+                if (confirm(`¿Are you sure about cancelling order: ${order.id}?`)) {
+                    order.state = 0;
+                    this.$http.put(`${api.url}order/${order.id}`, order)
+                        .then(res => {
+                            alert(`Order ${order.id} has been Cancelled`);
+                            this.getBusinessOrders(this.checkUserLogged.user.id);
+                        })
+                        .catch(err => alert(err));                
+                }
+            },
+
+            sendOrder(order) {
+                if (confirm(`¿Are you sure about shipping order: ${order.id}?`)) {
+                    order.state = 2;
+                    this.$http.put(`${api.url}order/${order.id}`, order)
+                        .then(res => {
+                            alert(`Order ${order.id} has been sent`);
+                            this.getBusinessOrders(this.checkUserLogged.user.id);
+                        })
+                        .catch(err => alert(err));
+                }
+            },
+
             deleteItem(product, index) {
                 if (confirm(`Are you sure about deleting item ${product.name}`)) {
                     product.state = 0;
@@ -280,12 +329,31 @@
             },
             checkout(cart) {
                 cart.state = 2;
+                let tempOrder = {};
                 this.$http.put(`${api.url}cart/${cart.id}`, cart)
                     .then(res => {
-                        this.records.cartItems = [];
-                        this.getOrders(this.checkUserLogged.user.id);
+                        this.getClientOrders(this.checkUserLogged.user.id);
                         this.records.page.tabIndex = 2;
-                        alert(`Order ${res.data.id} has been placed and will be delivered withing 3 business days`); 
+                        
+                        cart.products.forEach(product => {
+                            tempOrder = cart;
+                            tempOrder = { 
+                                products: [], 
+                                product: [], 
+                                company: product.userId, 
+                                state: 1, 
+                                date: new Date().toLocaleString(), 
+                                userId: this.checkUserLogged.user.id 
+                            };
+                            tempOrder.product.push(product);
+
+                            this.$http.post(`${api.url}order`, tempOrder)
+                                .then()
+                                .catch(err => alert(err));
+                        });
+
+                        cart = [];
+                        alert(`Order has been placed and will be delivered withing 3 business days`); 
                     })
                     .catch(err => alert(err));
             },
@@ -314,7 +382,8 @@
 
             init(id) {
                 this.getUser(id);
-                this.getOrders(id);
+                this.getClientOrders(id);
+                this.getBusinessOrders();
                 this.getCartItems(id);
                 this.getInventory(id);
             }

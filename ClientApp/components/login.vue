@@ -54,9 +54,7 @@
                 .then(response => {
                     if (response.data.length) {
                         this.$store.commit('login', response.data[0]);
-                        if (userData.Remember) {
-                            localStorage.setItem('userData', JSON.stringify(response.data[0]));
-                        }
+                        localStorage.setItem('userData', JSON.stringify(response.data[0]));
                         this.$router.push('/');
                     } else {
                         alert('NOPE!!');

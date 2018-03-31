@@ -38,5 +38,13 @@ namespace E_Store.Models
             }
         }
 
+        public IMongoCollection<Order> Orders
+        {
+            get
+            {
+                return database.GetCollection<Order>("Orders");
+            }
+        }
+
     }
 }

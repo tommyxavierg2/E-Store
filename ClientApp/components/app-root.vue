@@ -88,7 +88,20 @@
                     this.$router.replace('/');
                     toastr.success('See you soon');
                 }
+            },
+
+            init() {
+                if (!this.checkUserLogged.loggedIn) {
+                    let userData = JSON.parse(localStorage.getItem('userData'));
+                    if (userData) {
+                        this.$store.commit('login', userData);   
+                    }
+                }
             }
+        },
+
+        created() {
+            this.init();
         }
     }
 </script>
