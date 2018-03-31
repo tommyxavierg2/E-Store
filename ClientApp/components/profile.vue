@@ -248,6 +248,7 @@
             
             addImage() {
                 let t = document.getElementById('image').files[0];
+                console.log(t);
             },
 
             addItemToInventory(product) {
