@@ -17,7 +17,7 @@ const config = {
     authDomain: "starbase-6d93c.firebaseapp.com",
     databaseURL: "https://starbase-6d93c.firebaseio.com",
     projectId: "starbase-6d93c",
-    storageBucket: "",
+    storageBucket: "starbase-6d93c.appspot.com",
     messagingSenderId: "654031031562"
 };
 

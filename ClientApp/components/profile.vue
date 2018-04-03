@@ -132,7 +132,7 @@
 
                         <div class="form-group">
                             <label type="password">Image</label>
-                            <input id="image" type="file" class="form-control" @change="addImage()">
+                            <input id="image" type="file" class="form-control" accept="image/*" @change="addImage">
                         </div>
 
                         <div class="form-group">
@@ -247,24 +247,18 @@
                     .catch(err => alert(err));
             },
             
-           /* addImage(event) {
+            addImage(event) {
                 let t = event.target.files[0];
                 let fileName = t.name;
-                const fileReader = new FileReader();
-                fileReader.addEventListener('load', result => {
-                    console.log(result);
-                });
-                fileReader.readAsDataUrl(t);
-                //let storageRef = firebase.storage().ref('/productImages/'+ fileName);
+                let storageRef = firebase.storage().ref(`/productImages/${fileName}`);
                 let uploadTask = storageRef.put(t);
-                uploadTask.on('state_changed', function(snapshot) {},
+                uploadTask.on('state_changed', snapshot => {},
                     err => alert(err),
-                    response => console.log(uploadTask.snapshot.downloadURL)
-                )
-        }, */
+                    response => this.records.newProduct.image = uploadTask.snapshot.downloadURL)
+            },
 
             addItemToInventory(product) {
-                if (product.name && product.price && product.description) {
+                if (product.name && product.price && product.description && product.image) {
                     if(confirm(`¿Are you sure about adding ${product.name} to the inventory?`)) {
                         product.userId = this.checkUserLogged.user.id;
                         product.date = new Date().toLocaleString();
