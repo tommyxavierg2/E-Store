@@ -64,8 +64,8 @@
                 <b-tab v-if="checkUserLogged.user.client" title="Cart">
                     <div v-if="checkCartState">
                         <h1 style="margin-bottom: 15px;">Your Cart</h1>
-                        <product v-for="(item, index) in records.cartItems.products" :key="item.id" :product="item">
-                            <button class="btn" @click="deleteCartItem(item, index, records.cartItems)" style="margin-bottom: 2%;">Remove item from cart</button>
+                        <product v-for="(item, index) in records.cartItems.products" :key="item.id" :product="item" icon="true">
+                            <h6 class="btn" @click="deleteCartItem(item, index, records.cartItems)"> <icon icon="trash"/></h6>
                         </product>
                         <button type="button" class="btn btn-success btn-block" style="margin-top: 10px;" @click="checkout(records.cartItems)">Checkout</button>                   
                     </div>
@@ -154,6 +154,7 @@
 <script>
     import {api} from '../store/api';   
     import order from './order-template/order';
+    import firebase from 'firebase';
     import product from '../components/product-template/product';
     import  VeeValidate from 'vee-validate';
     import store from '../store/index';
@@ -246,10 +247,21 @@
                     .catch(err => alert(err));
             },
             
-            addImage() {
-                let t = document.getElementById('image').files[0];
-                console.log(t);
-            },
+           /* addImage(event) {
+                let t = event.target.files[0];
+                let fileName = t.name;
+                const fileReader = new FileReader();
+                fileReader.addEventListener('load', result => {
+                    console.log(result);
+                });
+                fileReader.readAsDataUrl(t);
+                //let storageRef = firebase.storage().ref('/productImages/'+ fileName);
+                let uploadTask = storageRef.put(t);
+                uploadTask.on('state_changed', function(snapshot) {},
+                    err => alert(err),
+                    response => console.log(uploadTask.snapshot.downloadURL)
+                )
+        }, */
 
             addItemToInventory(product) {
                 if (product.name && product.price && product.description) {

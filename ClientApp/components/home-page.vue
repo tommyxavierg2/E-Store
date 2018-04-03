@@ -15,7 +15,7 @@
     
         <div class="row">
 
-            <div class="col-md-4" v-for="product in records.products" :key="product.id" style="margin-bottom: 10px;">
+            <div class="col-md-3" v-for="product in records.products" :key="product.id" style="margin-bottom: 10px;">
     
                 <product :product="product">
                     <button class="btn btn-info btn-block" v-if="checkUserLogged.user.client" @click="addToCart(product)"><icon icon="cart-plus"/> RD$ {{product.price}} </button>

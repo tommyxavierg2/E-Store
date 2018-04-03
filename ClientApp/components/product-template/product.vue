@@ -13,6 +13,9 @@
                 </div>
             </div>
             <div class="col-md-6"> 
+                <div v-if="icon" class="close">
+                    <slot></slot>
+                </div> 
                 <div class="card-block">
                     <router-link class="card-text" :to="{ path: `/detail/${product.id}` }">{{product.description}}</router-link>
                     <h4 class="card-text">RD$ {{product.price}}</h4>
@@ -20,7 +23,7 @@
             </div>
         </div> 
 
-        <div class="list-group list-group-flush">
+        <div v-if="!icon" class="list-group list-group-flush">
             <slot></slot>
         </div> 
      

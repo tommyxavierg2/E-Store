@@ -37,8 +37,7 @@
         created() {
             this.formFields.push(
                 { name: 'Email', type: 'email', placeholder: 'Email@example.com', data: '', required: 'required', readonly: false },
-                { name: 'Password', type: 'password', placeholder: 'Password', data: '', required: 'required', readonly: false },
-                { name: 'Remember', type: 'checkbox', class: "input", placeholder: '', data: false, required: '', readonly: false }
+                { name: 'Password', type: 'password', placeholder: 'Password', data: '', required: 'required', readonly: false }
             );
             this.formButtons.push(
                 { name: 'Login',  class: "btn btn-success btn-block", action: this.login }

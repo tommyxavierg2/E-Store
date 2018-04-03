@@ -3,11 +3,11 @@
 
         <div class="row card-title">
             <div class="col-md-6">
-                <h4>{{orders.date}}</h4>
+                <h4 class="card-text">{{orders.date}}</h4>
             </div>
             <div class="col-md-6">
-                <h4>{{orders.id}}</h4>
-                <p>{{orderState}}</p>
+                <h4 class="card-text">{{orders.id}}</h4>
+                <p class="card-text">{{orderState}}</p>
             </div>
         </div>
 
