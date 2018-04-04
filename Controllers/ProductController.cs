@@ -34,13 +34,16 @@ namespace E_Store.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<Product> GetAll(string userId, int state)
+        public IEnumerable<Product> GetAll(string userId, int state, string name)
         {
-            if (String.IsNullOrEmpty(userId)) {
+            if (String.IsNullOrEmpty(userId) && String.IsNullOrEmpty(name)) {
                 return dbContext.Products.Find(x => x.State == state).ToList();
             }
-            else {
+            else if (String.IsNullOrEmpty(name)) {
                return dbContext.Products.Find(x => x.UserId == userId && x.State == state).ToList(); 
+            } 
+            else {
+               return dbContext.Products.Find(x => x.State == state && x.Name == name).ToList(); 
             }
 
         }
@@ -70,20 +73,6 @@ namespace E_Store.Controllers
                  throw ex;
              }
          }
-
-        /*[HttpGet("{userId}", Name = "GetProductByUserId")]
-         public IEnumerable<Product> GetProductByUserId(string userId)
-         {
-             try 
-             {
-                var product =  dbContext.Products.Find(x => x.UserId == userId).ToList();
-                return product;
-             }
-             catch (Exception ex)
-             {
-                 throw;
-             }
-         }*/
 
         [HttpPut("{id}")]
          public string Update(string id, [FromBody] Product product)

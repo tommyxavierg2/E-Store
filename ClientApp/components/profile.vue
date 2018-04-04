@@ -1,9 +1,7 @@
 <template>
     <div class="container text-center">
         
-        <div class="jumbotron">
-                <h1>{{records.page.title}}</h1>
-            </div>
+        <h1 class="jumbotron">{{records.page.title}}</h1>
 
         <b-card no-body>
             <b-tabs card v-model="records.page.tabIndex">
@@ -411,5 +409,7 @@
 </script>
 
 <style>
-
+    b-card {
+        padding-bottom: 1.25rem;
+    }
 </style>

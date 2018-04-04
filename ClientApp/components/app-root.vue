@@ -16,17 +16,15 @@
 
             <b-navbar-nav class="ml-auto">
 
-                <b-nav-form>
-                    <multiselect v-model="records.multiselect.searchValue" :options="records.multiselect.searchedProduct" :searchable="true" placeholder="¿What you looking for?" label="name" track-by="name" :loading="records.isLoading" :limit="5" @search-change="searchProduct" :options-limit="20" :option-height="100" @select="goToProductDetails" open-direction="bottom">
-                        <template slot="option" slot-scope="props" style="background-color: black'"> 
-                            <img class="option__image" :src="props.option.image" :alt="props.option.name" style="width: 80px;"> 
-                                <div class="option__desc"> 
-                                    <span> <router-link class="option__title" :to="{ path: `/product/${props.option.id}`}">{{ props.option.name }}</router-link> </span> 
-                                </div> 
-                            </template>   
-                        <span slot="noResult">Oops! No elements found.</span>
-                    </multiselect>
-                </b-nav-form>
+                <multiselect v-model="records.multiselect.searchValue" :options="records.multiselect.searchedProduct" :searchable="true" placeholder="¿What you looking for?" label="name" track-by="name" :loading="records.isLoading" :limit="5" @search-change="searchProduct" :options-limit="20" :option-height="100" @select="goToProductDetails" open-direction="bottom" class="form-control">
+                    <template slot="option" slot-scope="props"> 
+                        <img class="option__image" :src="props.option.image" :alt="props.option.name" style="width: 80px;"> 
+                            <div class="option__desc"> 
+                                <span> <router-link class="option__title" :to="{ path: `/product/${props.option.id}`}">{{ props.option.name }}</router-link> </span> 
+                            </div> 
+                        </template>   
+                    <span slot="noResult">Oops! No elements found.</span>
+                </multiselect>
                 
             </b-navbar-nav>
 
@@ -73,7 +71,7 @@
         methods: {
             searchProduct(query) {
                 this.records.multiselect.isLoading = true;
-                this.$http.get(`${api.url}product/${query}`)
+                this.$http.get(`${api.url}product?state=1&name=${query}`)
                     .then(response => {
                         this.records.multiselect.searchedProduct = response.data;
                         this.records.isLoading = false;
