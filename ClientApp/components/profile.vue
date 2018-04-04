@@ -11,7 +11,10 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="card">
-                                <img class="card-img-top" src="https://firebasestorage.googleapis.com/v0/b/morse-code-7eb28.appspot.com/o/robot.png?alt=media&token=c58acb41-2199-4a8d-a018-6514ecd37547" alt="UserPhoto">
+                                <label for="profilePicture">
+                                    <img class="card-img-top" :src="records.user.profilePicture" alt="UserPhoto">
+                                </label>
+                                <input id="profilePicture" type="file" style="display: none" accept="image/*" @change="addUserProfileImage($event)">
                                 <div class="card-block">
                                     <h3>{{fullName}}</h3>                    
                                 </div>
@@ -61,7 +64,7 @@
                         </div>
                     </div>
                 </b-tab>
-                <b-tab v-if="checkUserLogged.user.client" title="Cart">
+                <b-tab v-if="!checkUserLogged.user.accountType" title="Cart">
                     <div v-if="checkCartState">
                         <h1 style="margin-bottom: 15px;">Your Cart</h1>
                         <product v-for="(item, index) in records.cartItems.products" :key="item.id" :product="item" icon="true">
@@ -75,14 +78,14 @@
                     </div>
                 </b-tab>
                 <b-tab id="Orders" title="Orders">
-                    <div v-if="checkUserLogged.user.client">
+                    <div v-if="!checkUserLogged.user.accountType">
                         <div v-if="checkOrderState">
                             <product v-for="order in records.clientOrders.products" :key="order.id" :product="order"></product>
                         </div>
                         <div v-else> <h1>There are no orders in progress</h1> </div>
                     </div>
                     <div v-else>
-                        <order v-for="order in records.businessOrders" :key="order.id" :orders="order">
+                        <order v-if="records.businessOrders.length" v-for="order in records.businessOrders" :key="order.id" :orders="order">
                             <div class="row">
                                 <div class="col-md-6">
                                     <button class="btn btn-block btn-danger" @click="cancelOrder(order)">Cancel Order</button>
@@ -92,10 +95,10 @@
                                 </div>
                             </div>
                         </order>
-                        <div v-if="!records.businessOrders.length"> <h1>There are no pending orders</h1> </div>
+                        <div v-else> <h1>There are no pending orders</h1> </div>
                     </div>
                 </b-tab>
-                <b-tab title="Inventory" v-if="checkUserLogged.user.business">
+                <b-tab title="Inventory" v-if="checkUserLogged.user.accountType">
                     <div class="row" v-if="records.inventory.length">
                         <div class="col-md-4" style="padding: 10px;" v-for="(product, index) in records.inventory" :key="product.id">
                             <router-link v-if="!records.page.editing" :to="{ path: `/product/${product.id}`}">{{product.name}}</router-link>
@@ -108,7 +111,7 @@
                                 </div>
                                 <button v-if="records.page.editing" class="btn btn-success btn-block" @click="editItem(product)"> <icon icon="edit"/> Edit </button>
                                 <button v-if="records.page.editing" class="btn btn-warning btn-block" @click="records.page.editing = false"> <icon icon="edit"/> Cancel </button>
-                                <button v-if="checkUserLogged.loggedIn" class="btn btn-danger btn-block" @click="deleteItem(product, index)"> <icon icon="trash"/> </button>
+                                <button v-if="checkUserLogged.loggedIn" class="btn btn-danger btn-block" @click="deleteItem(product, index, records.inventory)"> <icon icon="trash"/> </button>
                                 <button v-if="checkUserLogged.loggedIn && !records.page.editing" class="btn btn-info btn-block" @click="records.page.editing = true"> <icon icon="edit"/> </button>
                             </div>
                         </div>
@@ -118,8 +121,11 @@
                         <button class="btn btn-success" @click="records.page.tabIndex = 3">Add Product</button>   
                     </div>
                 </b-tab>
-                <b-tab title="Add Product" v-if="checkUserLogged.user.business">
+                <b-tab title="Add Product" v-if="checkUserLogged.user.accountType">
                     <div class="form-control">
+                        <div v-if="records.newProduct.image">
+                            <img :src="records.newProduct.image" class="card-img-top"/>
+                        </div> 
                         <div class="form-group">
                             <label>Name</label>
                             <input type="text" class="form-control" v-model.trim="records.newProduct.name">
@@ -132,7 +138,7 @@
 
                         <div class="form-group">
                             <label type="password">Image</label>
-                            <input id="image" type="file" class="form-control" accept="image/*" @change="addImage">
+                            <input id="image" type="file" class="form-control" accept="image/*" @change="addNewProductImage($event)">
                         </div>
 
                         <div class="form-group">
@@ -169,11 +175,6 @@
                     businessOrders: {},
                     paymentInfo: {},
                     inventory: [],
-                    order: {
-                        userId: this.$route.params.id,
-                        date: new Date().toLocaleString(),
-                        items: [],
-                    },
                     cartItems: [],
                     newProduct: { name: '', description: '', image: '', price: '', userId: '', uploadedDate: '', state: 1 },
                     originalUser: {}
@@ -206,13 +207,9 @@
             }
         },
         methods: {
-            getUser(userId) {
-                this.$http.get(`${api.url}user/${userId}`)
-                .then(response => {
-                    this.records.user = response.data[0];
-                    this.records.originalUser = JSON.stringify(this.records.user);
-                })
-                .catch(err => toastr.error(err))
+            getUser() {
+                this.records.user = this.checkUserLogged.user;
+                this.records.originalUser = JSON.stringify(this.records.user);
             },
 
             getClientOrders(userId) {
@@ -223,8 +220,8 @@
                     .catch(err => alert(err));
             },
 
-            getBusinessOrders() {
-                this.$http.get(`${api.url}order?company=${this.checkUserLogged.user.id}`)
+            getBusinessOrders(userId) {
+                this.$http.get(`${api.url}order?company=${userId}`)
                     .then(res => {
                         this.records.businessOrders = res.data;
                     })
@@ -247,7 +244,18 @@
                     .catch(err => alert(err));
             },
             
-            addImage(event) {
+            addUserProfileImage(event, imageHolder) {
+                let image = '';
+                let t = event.target.files[0];
+                let fileName = t.name;
+                let storageRef = firebase.storage().ref(`/productImages/${fileName}`);
+                let uploadTask = storageRef.put(t);
+                uploadTask.on('state_changed', snapshot => {},
+                    err => alert(err),
+                    response => this.records.user.profilePicture = uploadTask.snapshot.downloadURL)
+            },
+
+            addNewProductImage(event) {
                 let t = event.target.files[0];
                 let fileName = t.name;
                 let storageRef = firebase.storage().ref(`/productImages/${fileName}`);
@@ -301,12 +309,12 @@
                 }
             },
 
-            deleteItem(product, index) {
+            deleteItem(product, index, cart) {
                 if (confirm(`Are you sure about deleting item ${product.name}`)) {
                     product.state = 0;
                     this.$http.put(`${api.url}product/${product.id}`, product)
                         .then(res => {
-                            this.records.inventory.splice(index, 1);
+                            cart.splice(index, 1);
                             alert(`Item ${product.name} successfully removed`);
                         })
                         .catch(err => alert(err));
@@ -355,12 +363,12 @@
                             tempOrder.product.push(product);
 
                             this.$http.post(`${api.url}order`, tempOrder)
-                                .then()
+                                .then(res => {
+                                    cart = [];
+                                    alert(`Order has been placed and will be delivered withing 3 business days`); 
+                                })
                                 .catch(err => alert(err));
                         });
-
-                        cart = [];
-                        alert(`Order has been placed and will be delivered withing 3 business days`); 
                     })
                     .catch(err => alert(err));
             },
@@ -370,7 +378,8 @@
                     if (result) {
                         this.$http.put(`${api.url}user/${userData.id}`, userData)
                             .then(response => {
-                                this.records.originalUser = JSON.stringify(this.records.user);
+                                this.records.originalUser = JSON.stringify(userData);
+                                localStorage.setItem('userData', this.records.originalUser);
                                 toastr.success('User sucessfuly update');
                                 this.records.page.editing = false;
                             })
@@ -387,12 +396,12 @@
                 this.records.page.editing = false;
             },
 
-            init(id) {
-                this.getUser(id);
-                this.getClientOrders(id);
-                this.getBusinessOrders();
-                this.getCartItems(id);
-                this.getInventory(id);
+            init(userId) {
+                this.getUser();
+                this.getClientOrders(userId);
+                this.getBusinessOrders(userId);
+                this.getCartItems(userId);
+                this.getInventory(userId);
             }
         },
         created() {

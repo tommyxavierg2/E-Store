@@ -4,7 +4,10 @@
         <b-navbar type="dark" class="space">
 
             <b-navbar-brand>
-                <router-link to="/" style="padding-left: 5%;">E-Store</router-link>
+                <router-link to="/" style="padding-left: 5%;">
+                    <img src="https://firebasestorage.googleapis.com/v0/b/starbase-6d93c.appspot.com/o/productImages%2FE-Store_Logo.PNG?alt=media&token=804da850-b2f9-4ea0-92c2-9a9a101a806d" alt="E-Store logo" width="100px" height="40px">
+                    E-Store
+                </router-link>
             </b-navbar-brand>
 
             <b-navbar-nav v-if="checkUserLogged.loggedIn">
@@ -135,7 +138,7 @@
     }
 
     body {
-        background-color: lightslategray;
+        background-color: #A3E4D7;
         padding-top: 0px;
     }
 

@@ -20,14 +20,16 @@
                         { name: 'Name', type: 'text', placeholder: 'Name', data: '', required: 'required|', readonly: false },
                         { name: 'Lastname', type: 'text', placeholder: 'LastName', data: '', required: 'required|', readonly: false },
                         { name: 'Email', type: 'email', placeholder: 'Email@example.com', data: '', required: 'required|email', readonly: false },
+                        { name: 'ProfilePicture', type: 'file', placeholder: '', data: '', required: '', readonly: false },
                         { name: 'Phone', type: 'number', placeholder: 'Phone, example: 1236549877', data: '', required: '', readonly: false },
                         { name: 'OptionalPhone', type: 'number', placeholder: 'House, Office or parents', data: '', required: '', readonly: false },
                         { name: 'Password', type: 'password', placeholder: 'Password', data: '', required: 'required|', readonly: false },
                         { name: 'ConfirmPassword', type: 'password', placeholder: 'ConfirmPassword', data: '', required: 'required|', readonly: false },
                         { name: 'Address', type: 'text', placeholder: 'Address', data: '', required: 'required|', readonly: false },
+                        { name: 'State', type: 'text', placeholder: '', data: 1, required: 'required|', readonly: true },
                         { name: "Account type", type: 'select', data: null, class: "", options: [ 
-                                { name: 'Client', placeholder: '', data: 0, required: 'required|', readonly: false },
-                                { name: 'Business', type: 'select', class: "", placeholder: '', data: 1, required: 'required|', readonly: false }
+                                { name: 'Client', placeholder: '', required: 'required|', readonly: false },
+                                { name: 'Business', placeholder: '', required: 'required|', readonly: false }
                             ] ,
                         }
                         
@@ -56,7 +58,7 @@
         methods: {
             register(userData) {
                 if (this.checkPasswordEquality(userData) && this.checkPasswordLength(userData)) {
-                    if (confirm("¿Are you sure you want to signUp with this information?")) {
+                    if (confirm("¿Are you sure you want to signup with this information?")) {
                         this.$http.post(`${api.url}user`, userData)
                         .then(response => {
                             toastr.success(`User ${userData.Name} ${userData.Lastname} successfully created, thank you for joining us!!`);

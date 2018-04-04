@@ -9,7 +9,7 @@
             </div>
 
             <div class="col-md-6">
-                <button v-if="checkUserLogged.user.client" type="button" class="btn" style="float: right; position: static;" @click="addItemsToCart(records.cart)" :disabled="!checkUserLogged.cart.length">Add To Cart {{checkUserLogged.cart.length}}</button>
+                <button v-if="checkUserType" type="button" class="btn" style="float: right; position: static;" @click="addItemsToCart(records.cart)" :disabled="!checkUserLogged.cart.length">Add To Cart {{checkUserLogged.cart.length}}</button>
             </div>
         </div>
     
@@ -18,7 +18,7 @@
             <div class="col-md-3" v-for="product in records.products" :key="product.id" style="margin-bottom: 10px;">
     
                 <product :product="product">
-                    <button class="btn btn-info btn-block" v-if="checkUserLogged.user.client" @click="addToCart(product)"><icon icon="cart-plus"/> RD$ {{product.price}} </button>
+                    <button class="btn btn-info btn-block" v-if="checkUserType" @click="addToCart(product)"><icon icon="cart-plus"/> RD$ {{product.price}} </button>
                 </product>
     
             </div>
@@ -56,6 +56,13 @@
         computed: {
             checkUserLogged() {
                 return this.$store.state;
+            },
+
+            checkUserType() {
+                if (this.checkUserLogged.loggedIn && !this.checkUserLogged.user.accountType)
+                    return true;
+                else 
+                    return false; 
             }
         },
     

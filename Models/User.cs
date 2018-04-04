@@ -25,6 +25,9 @@ namespace E_Store.Models
 
         [BsonElement("ConfirmPassword")]
         public string ConfirmPassword { get; set; }
+
+        [BsonElement("ProfilePicture")]
+        public string ProfilePicture { get; set; }
         
         [BsonElement("Phone")]
         public string Phone { get; set; }
@@ -35,11 +38,8 @@ namespace E_Store.Models
         [BsonElement("Address")]
         public string Address { get; set; }
 
-        [BsonElement("Client")]
-        public bool Client { get; set; }    
-
-        [BsonElement("Business")]
-        public bool Business { get; set; }
+        [BsonElement("AccountType")]
+        public int AccountType { get; set; }    
 
         [BsonElement("State")]
         public int State { get; set; }

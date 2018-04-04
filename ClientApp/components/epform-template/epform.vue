@@ -4,10 +4,10 @@
           <div class="form-group" v-for="field in formFields" :key="field.name">
             <label v-if="!field.class">{{field.name}} </label>
             <p :class="{ 'control': true }" v-if="!field.class">
-                <input v-if="field.type !== 'select'" :name="field.name" v-model="field.data" :class="{ 'form-control': true, 'text-danger': errors.has(field.name) }" :type="field.type"  :placeholder="field.placeholder" v-validate="`${field.required}`" :readonly="field.readonly">
+                <input v-if="field.type !== 'select'" :name="field.name" v-model="field.data" :class="{ 'form-control': true, 'text-danger': errors.has(field.name) }" :type="field.type"  :placeholder="field.placeholder" v-validate="`${field.required}`" @change="addImage($event, field)" :readonly="field.readonly">
                 <select v-else v-model="field.data" class="form-control">
                     <label :for="field.name"></label>
-                    <option v-for="option in field.options" :key="option.name" :id="option.name" :value="option.data" >{{option.name}}</option>
+                    <option v-for="(option, index) in field.options" :key="option.name" :id="option.name" :value="index" >{{option.name}}</option>
                  </select>
                 <span class="text-danger" v-show="errors.has(field.name)">{{ errors.first(field.name) }}</span>
             </p>
@@ -38,10 +38,13 @@
 
 <script>
     import  VeeValidate from 'vee-validate';
+    import firebase from 'firebase';
     
     export default {
         data() {
-            return {}
+            return {
+                profilePicture: ''
+            }
         },
         props: ['formFields', 'buttons'],
         methods: {
@@ -50,6 +53,7 @@
                 formData.forEach(field => {
                     fieldsData[field.name] = field.data;
                 });
+                fieldsData.profilePicture = this.profilePicture;
                 return fieldsData; 
             },
 
@@ -63,6 +67,19 @@
                         this.$router.replace('/');
                     }
                 });
+            },
+
+            addImage(event, field) {
+                if (field.name === 'ProfilePicture') {
+                    let t = event.target.files[0];
+                    let fileName = t.name;
+                    let storageRef = firebase.storage().ref(`/productImages/${fileName}`);
+                    let uploadTask = storageRef.put(t);
+                    uploadTask.on('state_changed', snapshot => {},
+                        err => alert(err),
+                        response => this.profilePicture = uploadTask.snapshot.downloadURL)
+                }
+
             }
         },
     }
