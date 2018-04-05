@@ -74,7 +74,7 @@
             getProducts() {
                 this.$http.get(`${api.url}product?state=1`)
                 .then( response => this.records.products = response.data)
-                .catch( err => toastr.warning(err));
+                .catch( err => alert(err));
             },
 
             addItemsToCart(recordsCart) {

@@ -39,7 +39,8 @@
                         { name: 'Register', class: "btn btn-success btn-block", action: this.register } 
                     ],
                     page: {
-                        title: 'Register'
+                        title: 'Register',
+                        isLoading: false
                     }
                 },
                 formButtons: []
@@ -61,14 +62,14 @@
                     if (confirm("¿Are you sure you want to signup with this information?")) {
                         this.$http.post(`${api.url}user`, userData)
                         .then(response => {
-                            toastr.success(`User ${userData.Name} ${userData.Lastname} successfully created, thank you for joining us!!`);
+                            alert(`User ${userData.Name} ${userData.Lastname} successfully created, thank you for joining us!!`);
                             this.$store.commit('login', response.data[0]);
                             this.$router.replace('/');
                         })
                         .catch(err => this.displayAlert(err));
                     }
                 } else {
-                    toastr.warning('Make sure both passwords are equal');
+                    alert('Make sure both passwords are equal');
                 }
             },
 

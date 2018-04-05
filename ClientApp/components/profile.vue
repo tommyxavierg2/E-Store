@@ -97,20 +97,19 @@
                     </div>
                 </b-tab>
                 <b-tab title="Inventory" v-if="checkUserLogged.user.accountType">
-                    <div class="row" v-if="records.inventory.length">
-                        <div class="col-md-4" style="padding: 10px;" v-for="(product, index) in records.inventory" :key="product.id">
-                            <router-link v-if="!records.page.editing" :to="{ path: `/product/${product.id}`}">{{product.name}}</router-link>
-                            <input class="card-text" v-model.trim="product.name" :readonly="!records.page.editing">
-                            <div class="card" style="width: 18rem;">
-                                <img class="card-img-top" :src="product.image" alt="Card image cap" width="100px" height="150px">
+                    <div class="row text-xs-center" v-if="records.inventory.length">
+                        <div class="col-md-4" style="padding: 2%; width: 80%;" v-for="(product, index) in records.inventory" :key="product.id">
+                            <input class="form-control" v-model.trim="product.name" :readonly="product.state !== 2">
+                            <div class="card">
+                                <img class="card-img-top" :src="product.image" alt="Card image cap" width="20%" height="15%">
                                 <div class="card-body">
-                                    <input class="card-text" v-model.trim="product.description" :readonly="!records.page.editing">
-                                    <input class="card-text" v-model.trim="product.price" :readonly="!records.page.editing">
+                                    <input class="form-control" v-model.trim="product.description" :readonly="product.state !== 2">
+                                    <input class="form-control" v-model.trim="product.price" :readonly="product.state !== 2">
                                 </div>
-                                <button v-if="records.page.editing" class="btn btn-success btn-block" @click="editItem(product)"> <icon icon="edit"/> Edit </button>
-                                <button v-if="records.page.editing" class="btn btn-warning btn-block" @click="records.page.editing = false"> <icon icon="edit"/> Cancel </button>
-                                <button v-if="checkUserLogged.loggedIn" class="btn btn-danger btn-block" @click="deleteItem(product, index, records.inventory)"> <icon icon="trash"/> </button>
-                                <button v-if="checkUserLogged.loggedIn && !records.page.editing" class="btn btn-info btn-block" @click="records.page.editing = true"> <icon icon="edit"/> </button>
+                                <button v-if="product.state === 2" class="btn btn-success btn-block" @click="editItem(product)"> <icon icon="edit"/> Edit </button>
+                                <button v-if="product.state === 2" class="btn btn-warning btn-block" @click="cancelItemEditing(product)"> <icon icon="edit"/> Cancel </button>
+                                <button v-if="product.state === 2" class="btn btn-danger btn-block" @click="deleteItem(product, index, records.inventory)"> <icon icon="trash"/> </button>
+                                <button v-if="product.state === 1" class="btn btn-info btn-block" @click="enableItemEditing(product)"> <icon icon="edit"/> </button>
                             </div>
                         </div>
                     </div>
@@ -144,7 +143,9 @@
                             <input type="text" class="form-control" v-model.trim="records.newProduct.price">
                         </div>
 
-                        <button type="submit" class="btn btn-success btn-block" style="margin-top: 10px;" @click="addItemToInventory(records.newProduct)">Add New Product</button>
+                        <button type="submit" class="btn btn-success btn-block" style="margin-top: 10px;" @click="addItemToInventory(records.newProduct)">
+                            <icon icon="plus"/> <span>Add</span>
+                        </button>
                     </div>
                 </b-tab>
             </b-tabs>
@@ -276,7 +277,7 @@
                         })
                         .catch(err => alert(err));
                     } else {
-                        this.records.tabIndex = 1;
+                        this.records.tabIndex = 2;
                     }
                 } else {
                     alert('Please make sure too fill all fields');
@@ -293,6 +294,16 @@
                         })
                         .catch(err => alert(err));                
                 }
+            },
+
+            cancelItemEditing(product) {
+                if (confirm('Are you sure about cancel the edition?')) {
+                    product.state = 1
+                }
+            },
+
+            enableItemEditing(product) {
+                product.state = 2;
             },
 
             sendOrder(order) {
@@ -332,13 +343,11 @@
                 if (confirm(`Are you sure about editing item ${product.name}`)) {
                     this.$http.put(`${api.url}product/${product.id}`, product)
                         .then(res => {
-                            this.records.page.editing = false;
+                            product.state = 1;
                             alert(`Item ${product.name} successfully updated`);
                         })
                         .catch(err => alert(err));
-                } else {
-                    this.records.page.editing = false;
-                }
+                } 
             },
             checkout(cart) {
                 cart.state = 2;
@@ -378,18 +387,18 @@
                             .then(response => {
                                 this.records.originalUser = JSON.stringify(userData);
                                 localStorage.setItem('userData', this.records.originalUser);
-                                toastr.success('User sucessfuly update');
+                                alert('User sucessfuly update');
                                 this.records.page.editing = false;
                             })
-                            .catch(err => toastr.error(err));
+                            .catch(err => alert(err));
                     } else {
-                        toastr.warning('Make sure all fields are properly filled');
+                        alert('Make sure all fields are properly filled');
                     }
                 });
 
             },
 
-            cancelEditing() {
+            cancelEditing(product) {
                 this.records.user = JSON.parse(this.records.originalUser);
                 this.records.page.editing = false;
             },

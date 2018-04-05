@@ -1,13 +1,9 @@
 <template>
     <div>
 
-        <form>
+        <h1 class="jumbotron titles">Login</h1>
 
-            <h1 class="jumbotron titles">Login</h1>
-
-            <ep-form :formFields="formFields" :buttons="formButtons"></ep-form>
-
-        </form>
+        <ep-form :formFields="formFields" :buttons="formButtons"></ep-form>
 
     </div>
 </template>

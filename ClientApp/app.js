@@ -8,8 +8,6 @@ import BootstrapVue from "bootstrap-vue";
 import firebase from 'firebase';
 import App from 'components/app-root'
 import VeeValidate from 'vee-validate';
-import toastr from 'toastr';
-toastr.options = { timeOut: 1000, positionClass: 'toast-top-right', showMethod: 'fadeIn', hideMethod: 'fadeOut' }
 
 
 const config = {
@@ -27,7 +25,6 @@ firebase.initializeApp(config);
 Vue.use(BootstrapVue);
 Vue.use(VeeValidate);
 Vue.component('icon', FontAwesomeIcon);
-window.toastr = toastr
 
 Vue.prototype.$http = axios;
 
